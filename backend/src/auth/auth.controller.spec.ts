@@ -90,7 +90,9 @@ describe('AuthController', () => {
   describe('logout', () => {
     it('should sign out user', async () => {
       await controller.logout(mockResponse as Response);
-      expect(mockResponse.clearCookie).toHaveBeenCalledWith('auth_token');
+      expect(mockResponse.clearCookie).toHaveBeenCalledWith('auth_token', {
+        path: '/',
+      });
     });
   });
 });
