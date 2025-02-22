@@ -1,0 +1,14 @@
+.formProperty {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.input {
+    width: 50%;
+    height: 2rem;
+}
+
+.error {
+    color: red;
+}
