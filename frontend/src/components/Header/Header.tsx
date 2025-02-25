@@ -21,9 +21,8 @@ export default function Header() {
       }
     };
     fetchProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  console.log(loading);
 
   return (
     <div className={styles.header}>

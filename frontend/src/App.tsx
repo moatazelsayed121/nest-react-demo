@@ -1,12 +1,8 @@
-import { useContext } from "react";
-import { AuthContext } from "./authContext";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Home, SignIn, SignUp, Layout } from "./pages";
 
 function App() {
-  const { user } = useContext(AuthContext);
-  console.log(user);
   return (
     <BrowserRouter>
       <Routes>

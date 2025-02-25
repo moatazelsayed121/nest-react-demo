@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useState, ReactNode } from "react";
 
 type User = {
   email: string;
@@ -19,10 +19,6 @@ const AuthContext = createContext<AuthContextInterface>({
 
 function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    // Call protected endpoint and check the response
-  }, []);
 
   const setCurrentUser = (user: User) => {
     setUser(user);

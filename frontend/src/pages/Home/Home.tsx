@@ -1,9 +1,15 @@
-import styles from './home.module.css'
+import { useContext } from "react";
+import { AuthContext } from "../../authContext";
+import styles from "./home.module.css";
 
 export default function Home() {
-    return (
-        <div className={styles.home}>
-            <div>Welcome to the application.</div>
-        </div>
-    )
+  const { user } = useContext(AuthContext);
+  return (
+    <div className={styles.home}>
+      <div>
+        Welcome to the application
+        <span className={styles.username}>{` ${user?.name || 'Guest'}`}</span>.
+      </div>
+    </div>
+  );
 }

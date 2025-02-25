@@ -16,10 +16,10 @@ describe('AuthController', () => {
   let mockResponse: Partial<Response>;
 
   const mockAuthService = {
-    signUp: jest.fn().mockImplementation((dto: RegisterDto) => {
+    signUp: jest.fn().mockImplementation((_dto: RegisterDto) => {
       return { access_token: 'fake-token' };
     }),
-    signIn: jest.fn().mockImplementation((dto: LoginDto) => {
+    signIn: jest.fn().mockImplementation((_dto: LoginDto) => {
       return { access_token: 'fake-token' };
     }),
   };

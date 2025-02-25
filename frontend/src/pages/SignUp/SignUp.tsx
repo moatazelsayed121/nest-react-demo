@@ -8,9 +8,9 @@ import {
 import styles from "../../styles/form.module.css";
 import { Input } from "../../components";
 import {
-  validateEmailPattern,
-  validatePasswordPattern,
-  validateNamePattern,
+  isValidEmail,
+  isValidPassword,
+  isValidName,
 } from "../../validationHelper.ts";
 import axionsInstance from "../../network/axiosInstance.ts";
 import { useNavigate } from "react-router-dom";
@@ -31,7 +31,7 @@ export default function SignUp() {
     password: "",
   });
   const [errors, setErrors] = useState<Partial<UserData>>({});
-  const [apiError, setApiErrors] = useState<string>("");
+  const [apiErrors, setApiErrors] = useState<string[]>([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { setCurrentUser } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -48,7 +48,7 @@ export default function SignUp() {
   const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsSubmitted(true);
-    setApiErrors("");
+    setApiErrors([]);
     // Validate input
     if (isValidData()) {
       // Call backend
@@ -57,31 +57,23 @@ export default function SignUp() {
         .then(async function () {
           const userReponse = await axionsInstance.get("/auth/profile");
           setCurrentUser(userReponse.data);
-
           navigate("/");
         })
         .catch(function (error) {
           // handle error
-          setApiErrors(
-            error?.response?.status
-              ? generateErrorMessage(error.response.status)
-              : "Internal server error"
-          );
+          setApiErrors(generateErrorMessage(error?.response));
         });
     }
   };
   useEffect(() => {
-    if (isSubmitted) {
-      const errors: Partial<UserData> = {};
-      if (!validateEmailPattern(userData.email))
-        errors.email = "Email is invalid";
-      if (!validatePasswordPattern(userData.password))
-        errors.password = "Password is invalid";
-      if (!validateNamePattern(userData.name)) errors.name = "Name is invalid";
+    const errors: Partial<UserData> = {};
+    if (!isValidEmail(userData.email)) errors.email = "Email is invalid";
+    if (!isValidPassword(userData.password))
+      errors.password = "Password is invalid";
+    if (!isValidName(userData.name)) errors.name = "Name is invalid";
 
-      setErrors(errors);
-    }
-  }, [isSubmitted, userData]);
+    setErrors(errors);
+  }, [userData]);
 
   return (
     <form className={styles.formContainer}>
@@ -114,7 +106,13 @@ export default function SignUp() {
       <button onClick={handleSubmit} className={styles.submitButton}>
         Sign up
       </button>
-      {apiError && <div className={styles.error}>{apiError}</div>}
+      {apiErrors && (
+        <ul className={styles.errorsContainer}>
+          {apiErrors.map((error) => {
+            return <li className={styles.error}>{error}</li>;
+          })}
+        </ul>
+      )}
     </form>
   );
 }

@@ -16,5 +16,8 @@
 
 .error {
   color: red;
+}
+
+.errorsContainer {
   align-self: center;
 }

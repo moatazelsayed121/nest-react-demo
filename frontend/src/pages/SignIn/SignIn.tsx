@@ -24,6 +24,7 @@ interface Error {
   [key: string]: string;
 }
 
+// Sign in and Sign up can be combined as one component but I would rather split to be future proof
 export default function SignIn() {
   const [userData, setUserData] = useState<NewUserData>({
     email: "",
@@ -33,7 +34,7 @@ export default function SignIn() {
     email: "",
     password: "",
   });
-  const [apiError, setApiErrors] = useState<string>("");
+  const [apiErrors, setApiErrors] = useState<string[]>([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { setCurrentUser } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -50,7 +51,7 @@ export default function SignIn() {
   const handleSubmit = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsSubmitted(true);
-    setApiErrors("");
+    setApiErrors([]);
     // Validate input
     if (isValidData()) {
       // call backend
@@ -63,11 +64,7 @@ export default function SignIn() {
         })
         .catch(function (error) {
           // handle error
-          setApiErrors(
-            error?.response?.status
-              ? generateErrorMessage(error.response.status)
-              : "Internal server error"
-          );
+          setApiErrors(generateErrorMessage(error?.response));
         });
     }
   };
@@ -106,7 +103,13 @@ export default function SignIn() {
       >
         Sign in
       </button>
-      {apiError && <div className={styles.error}>{apiError}</div>}
+      {apiErrors && (
+        <ul className={styles.errorsContainer}>
+          {apiErrors.map((error) => {
+            return <li className={styles.error}>{error}</li>;
+          })}
+        </ul>
+      )}
     </form>
   );
 }
